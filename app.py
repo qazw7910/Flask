@@ -1,13 +1,16 @@
+from datetime import datetime
+
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-@app.route("/", methods = ["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
 def home():
     if request.method == "POST":
         entry_content = request.form.get("content")
-        print(entry_content)
-    return render_template("home.html")
+        formatted_datetime = datetime.now().strftime("%Y-%m-%d")
+        print(entry_content, formatted_datetime)
+    return render_template('home.html')
 @app.route("/expression/")
 def render_expression():
     # interpolation
@@ -112,4 +115,4 @@ def for_loop_conditionals():
     return render_template("for_loop_conditionals.html", user_os=user_os)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
