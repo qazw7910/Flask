@@ -1,25 +1,28 @@
 from datetime import datetime
 
 from flask import Flask, render_template, request
+from pymongo import MongoClient
 
 app = Flask(__name__)
+client = MongoClient("mongodb+srv://okmijn7980:MQXLounvmqYNhanQ@microblog-application.ytrcfbq.mongodb.net/test")
+app.db = client.microblog
 entries = []
+
+
 @app.route("/", methods=["GET", "POST"])
 def home():
+    print([e for e in app.db.entries.find({})])
+
     if request.method == "POST":
         entry_content = request.form.get("content")
         formatted_datetime = datetime.now().strftime("%Y-%m-%d")
         entries.append((entry_content, formatted_datetime))
+        app.db.entries.insert_one({"content": entry_content, "date": formatted_datetime})
 
-    entries_with_date = [
-        (
-            entry[0],
-            entry[1],
-            entry[1]
-        )
-        for entry in entries
-    ]
+    entries_with_date = [(entry["content"], entry["date"], entry["date"]) for entry in app.db.entries.find({})]
     return render_template('home.html', entries=entries_with_date)
+
+
 @app.route("/expression/")
 def render_expression():
     # interpolation
@@ -58,6 +61,7 @@ class GalileanMoons:
         self.third = third
         self.fourth = fourth
 
+
 @app.route("/data-structures/")
 def render_data_structures():
     movies = [
@@ -81,10 +85,13 @@ def render_data_structures():
     return render_template(
         "data_structures.html", **kwargs
     )
+
+
 @app.route("/conditionals-basics/")
 def render_conditionals_basics():
     company = "Apple"
-    return render_template("conditionals_basics.html",company=company)
+    return render_template("conditionals_basics.html", company=company)
+
 
 @app.route("/for-loop/")
 def render_for_loop():
@@ -98,7 +105,8 @@ def render_for_loop():
         "Uranus",
         "Neptune",
     ]
-    return render_template("for_loop.html",planets=planets)
+    return render_template("for_loop.html", planets=planets)
+
 
 @app.route("/for-loop/dict/")
 def render_for_loop_dict():
@@ -111,6 +119,7 @@ def render_for_loop_dict():
     }
     return render_template("for_loop_dict.html", cuisines=cuisines)
 
+
 @app.route("/for-loop/conditionals")
 def for_loop_conditionals():
     user_os = [
@@ -122,6 +131,7 @@ def for_loop_conditionals():
         ("George", "Windows"),
     ]
     return render_template("for_loop_conditionals.html", user_os=user_os)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
