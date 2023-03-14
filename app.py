@@ -23,6 +23,11 @@ def create_app():
         entries_with_date = [(entry["content"], entry["date"], entry["date"]) for entry in app.db.entries.find({})]
         return render_template('home.html', entries=entries_with_date)
 
+    @app.route("/todo/")
+    def todo():
+        todos = [("Get milk", False), ("Learn programming", True)]
+        return render_template("jinja_lab.html", todos=todos)
+
 
     @app.route("/expression/")
     def render_expression():

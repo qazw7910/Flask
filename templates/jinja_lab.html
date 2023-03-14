@@ -1,11 +1,20 @@
+{% import "jinja_lab_macro.jinja2" as macro %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>First Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jinja_lab</title>
 </head>
 <body>
-    <h1>{{ name }}</h1>
-    <p>This is your introduction to the {{ template_name }} templating language</p>
+
+{% set num_todos = todos | length %}
+
+{% if num_todos > 0 %}
+    <p>You have {{ num_todos }} left to do today</p>
+    {{ macro.todo_list(todos) }}
+{% else %}
+    <p>you have nothing to do</p>
+{% endif %}
 </body>
 </html>
