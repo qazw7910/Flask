@@ -9,7 +9,7 @@ def create_app():
     app = Flask(__name__)
     client = MongoClient(os.getenv("MONGODB_URI"))
     app.db = client.microblog
-
+    app.run(debug=True)
 
     @app.route("/", methods=["GET", "POST"])
     def home():
@@ -140,4 +140,5 @@ def create_app():
 
     return app
 if __name__ == '__main__':
-    app.run(debug=True)
+    create_app()
+
