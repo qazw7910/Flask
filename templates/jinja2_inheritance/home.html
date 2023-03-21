@@ -1,0 +1,13 @@
+{% extends "jinja2_inheritance/base.html" %}
+{% import "jinja2_inheritance/macro.jinja2" as macro %}
+
+{% block content %}
+    {% set num_todos = todos | length %}
+
+    {% if num_todos > 0 %}
+        <p>You have {{ num_todos }} left to do today.</p>
+        {{ macro.todo_list(todos) }}
+    {% else %}
+        <p>you have nothing to do</p>
+    {% endif %}
+{% endblock %}

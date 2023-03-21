@@ -10,6 +10,10 @@ app = Flask(__name__)
 client = MongoClient(os.getenv("MONGODB_URI"))
 app.db = client.microblog
 
+todos = [
+    ("Get milk", False),
+    ("Learn programming", True)
+]
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -26,8 +30,17 @@ def home():
 
 @app.route("/todo/")
 def todo():
-    todos = [("Get milk", False), ("Learn programming", True)]
-    return render_template("jinja_lab.html", todos=todos)
+    return render_template("jinja2_inheritance/jinja_lab.html", todos=todos)
+
+@app.route("/todo/<string:todo>")
+def todo_item(todo:str):
+    for text, completed in todos:
+        if text == todo:
+            completed_text = "[x]" if completed else "[]"
+            title = f"{completed_text} - Todos"
+            return render_template("jinja2_inheritance/todo.html", text=text, completed=completed, title=title)
+    else:
+        return render_template("jinja2_inheritance/not-found.html", text=todo, title="Not found")
 
 
 @app.route("/expression/")
