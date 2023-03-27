@@ -6,9 +6,13 @@ habit = Flask(__name__)
 habits = ["Test habit", "Test habit2"]
 
 
-def date_range(start: datetime.date):
-    date = [start + datetime.timedelta(days=diff) for diff in range(-3, 4)]
-    return date
+@habit.context_processor
+def add_calc_date_range():
+    def date_range(start: datetime.date):
+        date = [start + datetime.timedelta(days=diff) for diff in range(-3, 4)]
+        return date
+
+    return {"date_range": date_range}
 
 
 @habit.route("/")
@@ -22,7 +26,6 @@ def index():
     return render_template("habit/index.html",
                            habits=habits,
                            title="Habit Tracker - Home",
-                           date_range=date_range,
                            selected_date=selected_date)
 
 
